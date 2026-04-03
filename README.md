@@ -29,7 +29,7 @@ O projeto utiliza o dataset:
 
 ## Tecnologias utilizadas
 
-- Python
+- Python -> 3.12.10
 - Pandas
 - NumPy
 - Matplotlib / Seaborn
@@ -43,11 +43,12 @@ O projeto utiliza o dataset:
 ```text
 student-performance-prediction/
 │
+├── app.py                  # Configurações do streamlit
 ├── data_loader.py          # Carregamento do dataset
 ├── data_science.py         # Análise exploratória e pré-processamento
-├── machine_learning.py      # Treinamento dos modelos
-├── model_evaluation.py      # Métricas e avaliação dos modelos
-├── main.py                  # Pipeline principal
+├── machine_learning.py     # Treinamento dos modelos
+├── model_evaluation.py     # Métricas e avaliação dos modelos
+├── main.py                 # Pipeline principal
 ├── requirements.txt        # Dependências do projeto
 ├── .gitignore
 └── README.md
@@ -141,10 +142,16 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-### 4. Execute o projeto
+### 4. Executar apenas o machine learning
 
 ```bash
 python main.py
+```
+
+### 4. Executar machine learning + streamlit
+
+```bash
+streamlit run app.py
 ```
 
 ---
