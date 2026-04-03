@@ -1,5 +1,5 @@
 from model_evaluation import calculate_overall_auc, cross_validation, generate_classification_report, generate_confusion_matrix, generate_final_importance_chart, generate_roc_curve
-from data_science import process_data
+from data_science import eda, enconding_categorical, enconding_class_train, process_data, remove_multicollinearity_train
 from data_loader import load_data
 from machine_learning import evaluate_models, hyperparameter_tuning, prepare_data, train_model
 
@@ -16,9 +16,48 @@ print("Iniciando processo de download do dataset...")
 df = process_data(load_data())
 print("Dataset carregado e processado com sucesso.")
 
+
+print("")
+
+
+print("Transformando coluna 'Class' em valores numéricos...")
+df, le = enconding_class_train(df)
+print("Transformação concluída.")
+
+
+print("")
+
+
+print("Transformando colunas categóricas em colunas numéricas e eliminar a primeira categoria para evitar multicolinearidade...")
+df = enconding_categorical(df)
+print("Transformação concluída.")
+
+
+print("")
+
+
+print("Gerando análise de correlação entre variáveis...")
+df = eda(df)
+
+
+print("")
+
+
+print("Analisando matriz de correlação para identificar colunas altamente correlacionadas e remover colunas redundantes...")
+df, to_drop = remove_multicollinearity_train(df)
+print("Remoção concluída.")
+
+
+print("")
+
+
 print("Iniciando preparação dos dados para machine learning...")
 X_train, X_test, y_train, y_test, X, y = prepare_data(df)
 print("Preparação dos dados concluída.")
+
+
+print("")
+
 
 print("Iniciando treinamento dos modelos....")
 initial_models = {
@@ -32,9 +71,11 @@ initial_models = {
     "AdaBoost": AdaBoostClassifier()
 }
 
-
 trained_models = train_model(X_train, y_train, initial_models)
 print("Treinamento dos modelos concluído.")
+
+
+print("")
 
 
 print("Iniciando avaliação dos modelos antes do hyperparameter tuning....")
@@ -42,37 +83,71 @@ evaluate_models(trained_models, X_test, y_test)
 print("Avaliação dos modelos concluída.")
 
 
+print("")
+
+
 print("Iniciando hyperparameter tuning e treinamento dos modelos...")
 best_models = hyperparameter_tuning(X_train, y_train)
 print("Treinamento dos modelos concluído.")
+
+
+print("")
+
 
 print("Iniciando avaliação dos modelos depois do hyperparameter tuning....")
 evaluate_models(best_models, X_test, y_test)
 print("Avaliação dos modelos concluída.")
 
+
+print("")
+
+
 print("O modelo final escolhido é o Random Forest Classifier, que apresentou a melhor performance após o hyperparameter tuning.")
 final_model = best_models["Random Forest Classifier"]
+
+
+print("")
 
 
 print("Gerando matriz de confusão para o modelo final escolhido...")
 generate_confusion_matrix(final_model, X_test, y_test)
 print("Matriz de confusão gerada com sucesso.")
 
+
+print("")
+
+
 print("Gerando relatório de classificação para o modelo final escolhido...")
 generate_classification_report(y_test, final_model.predict(X_test))
 print("Relatório de classificação gerado com sucesso.")
+
+
+print("")
+
 
 print("Gerando curva ROC para o modelo final escolhido...")
 y_test_bin, y_score = generate_roc_curve(final_model, X_test, y_test)
 print("Curva ROC gerada com sucesso.")
 
+
+print("")
+
+
 print("Calculando AUC geral para o modelo final escolhido...")
 calculate_overall_auc(y_test_bin, y_score)
 print("AUC geral calculada com sucesso.")
 
+
+print("")
+
+
 print("Gerando gráfico de importância das features para o modelo final escolhido...")
 generate_final_importance_chart(final_model, X)
 print("Gráfico de importância das features gerado com sucesso.")
+
+
+print("")
+
 
 print("Realizando cross-validation para o modelo final escolhido...")
 cross_validation(final_model, X, y)
