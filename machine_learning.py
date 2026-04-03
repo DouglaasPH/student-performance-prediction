@@ -142,7 +142,7 @@ def hyperparameter_tuning(X_train, y_train):
         n_jobs=-1
     )
     grid_search_mlp = GridSearchCV(
-        MLPClassifier(max_iter=1000),
+        MLPClassifier(max_iter=500),
         param_grid_mlp,
         cv=5,
         scoring='accuracy',
